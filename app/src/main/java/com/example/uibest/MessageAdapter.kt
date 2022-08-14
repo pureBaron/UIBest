@@ -6,12 +6,17 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class MessageAdapter(val messageList: List<Message>) : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
+class MessageAdapter(val messageList: List<Message>) : RecyclerView.Adapter<MessageAdapter.MessageViewHolder>(){
 
-    inner class LeftViewHolder(view: View): RecyclerView.ViewHolder(view){
+
+    sealed class MessageViewHolder(view: View): RecyclerView.ViewHolder(view){
+
+    }
+
+    inner class LeftViewHolder(view: View): MessageViewHolder(view){
         val leftMsg: TextView = view.findViewById(R.id.leftMsg)
     }
-    inner class RightViewHolder(view: View): RecyclerView.ViewHolder(view){
+    inner class RightViewHolder(view: View): MessageViewHolder(view){
         val rightMsg: TextView = view.findViewById(R.id.rightMsg)
     }
 
@@ -20,7 +25,7 @@ class MessageAdapter(val messageList: List<Message>) : RecyclerView.Adapter<Recy
         return msg.type
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MessageViewHolder {
         val vh : View
         if(viewType == Message.RECEIVED) {
             vh = LayoutInflater.from(parent.context)
@@ -33,7 +38,7 @@ class MessageAdapter(val messageList: List<Message>) : RecyclerView.Adapter<Recy
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MessageViewHolder, position: Int) {
         val msg = messageList[position]
         when(holder){
             is RightViewHolder ->{holder.rightMsg.text = msg.text}
